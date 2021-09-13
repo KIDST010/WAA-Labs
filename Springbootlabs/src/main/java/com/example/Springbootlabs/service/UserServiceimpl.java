@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+
 @Service
 @Transactional
 public class UserServiceimpl implements UserService{
@@ -46,6 +46,16 @@ public class UserServiceimpl implements UserService{
     @Override
     public List<User> getMoreThanOnePost() {
         return userRepository.getMoreThanOnePost();
+    }
+
+    @Override
+    public List<User> getAllUsersWithFirstName(String firstName) {
+        return userRepository.getAllUsersWithFirstName(firstName);
+    }
+
+    @Override
+    public List<User> findUserByFullName(String firstName, String lastName) {
+        return userRepository.findUserByFullName(firstName,lastName);
     }
 
 

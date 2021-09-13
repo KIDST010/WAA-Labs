@@ -3,55 +3,56 @@ package com.example.Springbootlabs.controller;
 import com.example.Springbootlabs.domain.Post;
 import com.example.Springbootlabs.service.Postservice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/posts")
 @RestController
-public class Postcontroller {
+public class PostController {
+    Postservice postService;
+
     @Autowired
-    Postservice postservice;
+    public void setPostService(Postservice postService) {
+        this.postService = postService;
+    }
 
+    //Read All Posts
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
-    public List<Post> getAll() {
-        return postservice.getAll();
+    public List<Post> findAll() {
+        List<Post> postList = new ArrayList<>();
+        postService.getAll().forEach(p -> postList.add(p));
+        return postList;
     }
 
-
+    //Read Single Post
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
-    public Optional<Post> getById(@PathVariable("id") int id) {
-        return postservice.getById(id);
+    public Optional<Post> findPostById(@PathVariable("id") long id) {
+        return postService.getById(id);
     }
-
+    //Create Post
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PostMapping
-    public Post postItem(@RequestBody Post p) {
-        return postservice.postItem(p);
+    public void save(@RequestBody Post post) {
+        postService.postItem(post);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable("id") long id) {
-        postservice.deleteItem(id);
-    }
-
+    //Update Post
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/{id}")
-    public Post updateItem(@RequestBody Post post, @PathVariable("id") long id) {
-
-        return postservice.updateItem(post, id);
+    public void updatePost(@RequestBody Post post, @PathVariable("id") long id) {
+        post.setId(id);
+        postService.postItem(post);
     }
 
-   /* @GetMapping("/hat/{id}")
-    public EntityModel<Post> getIdH(@PathVariable("id") long id) {
-        Post post = postservice.getById(id).orElse(null);
-        EntityModel<Post> resource = EntityModel.of(post);
-
-        WebMvcLinkBuilder linkto = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(Postcontroller.class).deleteItem(id));
-
-        WebMvcLinkBuilder linkto2 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(Postcontroller.class).postItem(post));
-        resource.add(linkto.withRel("delete link:"));
-        resource.add(linkto2.withRel("post link:"));
-        return resource;
-    }*/
-
+    //Delete Post given an Id
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable("id") long id) {
+        postService.deleteItem(id);
+    }
 }
