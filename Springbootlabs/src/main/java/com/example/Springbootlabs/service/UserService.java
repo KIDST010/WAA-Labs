@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    void save(User user);
-    List<User> getAllUsers();
-    User getUserById(long id);
-    List<Post> getPosts(long id);
-    List<User> getUsersWhoHavePosts();
-    List<User> getAllUsersWithFirstName(String firstName);
-    List<User> findUserByFullName(String firstName, String lastName);
+    public List<User> getAll();
+    public User getById(long id);
+    public void postItem(User p);
+    public void deleteItem(long id);
+    public List<Post> getPosts(Long id);
+    public List<User> getMoreThanOnePost();
 }

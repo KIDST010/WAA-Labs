@@ -1,6 +1,7 @@
 package com.example.Springbootlabs.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Post {
@@ -9,9 +10,6 @@ public class Post {
     String title;
     String content;
     String author;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name="user_posts")
-    User user;
 
     public Post(long id, String title, String content, String author) {
         this.id = id;
